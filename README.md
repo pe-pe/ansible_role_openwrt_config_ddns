@@ -1,6 +1,8 @@
 OpenWRT Config DDNS
 =========
 
+[![Role](https://img.shields.io/ansible/role/56374.svg)](https://galaxy.ansible.com/pe_pe/openwrt_config_ddns/)
+[![Quality](https://img.shields.io/ansible/quality/56374.svg)](https://galaxy.ansible.com/pe_pe/openwrt_config_ddns/)
 [![CI](https://github.com/pe-pe/ansible_role_openwrt_config_ddns/workflows/CI/badge.svg)](https://github.com/pe-pe/ansible_role_openwrt_config_ddns/actions)
 
 Ansible role that configures ddns settings of OpenWRT device (mainly those which are usually defined in `/etc/config/ddns`).
