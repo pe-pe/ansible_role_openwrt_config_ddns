@@ -1,0 +1,58 @@
+---
+# Variables used in tasks:
+# - openwrt_config_ddns (dict)
+
+- name: Install packages
+  opkg:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - ddns-scripts
+  when: openwrt_config_ddns is defined
+
+- name: Revert pending UCI changes
+  uci:
+    command: revert
+    key: ddns
+  when: openwrt_config_ddns is defined
+
+- name: Configure services sections
+  uci:
+    command: section
+    key: ddns.{{ item.key }}
+    type: service
+    value:
+      service_name: "{{ item.value.service_name }}"
+      username: "{{ item.value.username | default('X') }}"
+      password: "{{ item.value.password | default('X') }}"
+      domain: "{{ item.value.domain | default() }}"
+      lookup_host: "{{ item.value.lookup_host | default() }}"
+      ip_source: "{{ item.value.ip_source | default('network') }}"
+      ip_url: "{{ item.value.ip_url | default() }}"
+      interface: "{{ item.value.interface | default() }}"
+      ip_network: "{{ item.value.ip_network | default() }}"
+      enabled: "{{ item.value.enabled | default(1) }}"
+  with_dict: "{{ openwrt_config_ddns }}"
+  when: openwrt_config_ddns is defined
+
+- name: Commit UCI changes done
+  uci:
+    command: commit
+  when: openwrt_config_ddns is defined
+  notify: Restart ddns
+
+# Extra check to allow ansible --check proceed run prior service installation
+- name: Check if service exists
+  stat:
+    path: /etc/init.d/ddns
+  register: ddns_service_file
+  when: openwrt_config_ddns is defined
+
+- name: Enable and start service
+  service:
+    name: ddns
+    state: started
+    enabled: true
+  when:
+    - ddns_service_file is defined
+    - ddns_service_file.stat.exists | default(false)

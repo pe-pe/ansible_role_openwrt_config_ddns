@@ -1,0 +1,3 @@
+---
+- name: Restart ddns
+  command: /etc/init.d/ddns restart

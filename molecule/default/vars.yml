@@ -1,0 +1,6 @@
+---
+openwrt_install_recommended_packages: false
+
+openwrt_config_ddns:
+  ddnssvc: { service_name: testsvc, username: testuser, password: testpass, domain: test.lan, lookup_host: test.lan,
+             ip_source: web, ip_url: http://testip.internet, interface: test, ip_network: wan, enabled: 0 }

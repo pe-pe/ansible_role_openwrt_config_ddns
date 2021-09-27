@@ -1,0 +1,28 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  vars_files:
+    - vars.yml
+
+  roles:
+    - role: ansible_role_openwrt
+
+  tasks:
+    # ddns config test
+    - name: Check whether ddns configuration was set
+      command: "uci show ddns"
+      register: uci_show_ddns_result
+      failed_when:
+        - not "ddnssvc=service" in uci_show_ddns_result.stdout or
+          not "ddnssvc.service_name='" ~ openwrt_config_ddns.ddnssvc.service_name ~ "'" in uci_show_ddns_result.stdout or
+          not "ddnssvc.username='" ~ openwrt_config_ddns.ddnssvc.username ~ "'" in uci_show_ddns_result.stdout or
+          not "ddnssvc.password='" ~ openwrt_config_ddns.ddnssvc.password ~ "'" in uci_show_ddns_result.stdout or
+          not "ddnssvc.domain='" ~ openwrt_config_ddns.ddnssvc.domain ~ "'" in uci_show_ddns_result.stdout or
+          not "ddnssvc.lookup_host='" ~ openwrt_config_ddns.ddnssvc.lookup_host ~ "'" in uci_show_ddns_result.stdout or
+          not "ddnssvc.ip_source='" ~ openwrt_config_ddns.ddnssvc.ip_source ~ "'" in uci_show_ddns_result.stdout or
+          not "ddnssvc.ip_url='" ~ openwrt_config_ddns.ddnssvc.ip_url ~ "'" in uci_show_ddns_result.stdout or
+          not "ddnssvc.interface='" ~ openwrt_config_ddns.ddnssvc.interface ~ "'" in uci_show_ddns_result.stdout or
+          not "ddnssvc.ip_network='" ~ openwrt_config_ddns.ddnssvc.ip_network ~ "'" in uci_show_ddns_result.stdout or
+          not "ddnssvc.enabled='" ~ openwrt_config_ddns.ddnssvc.enabled ~ "'" in uci_show_ddns_result.stdout
+      changed_when: false
