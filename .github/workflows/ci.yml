@@ -31,7 +31,7 @@ jobs:
           python-version: 3.x
 
       - name: Install Molecule and test tools
-        run: pip3 install ansible molecule molecule-docker docker yamllint ansible-lint
+        run: pip3 install ansible molecule 'molecule-plugins[docker]' docker yamllint ansible-lint
 
       - name: Run Molecule tests
         run: molecule test
