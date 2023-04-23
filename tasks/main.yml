@@ -41,18 +41,10 @@
   when: openwrt_config_ddns is defined
   notify: Restart ddns
 
-# Extra check to allow ansible --check proceed run prior service installation
-- name: Check if service exists
-  stat:
-    path: /etc/init.d/ddns
-  register: ddns_service_file
-  when: openwrt_config_ddns is defined
-
 - name: Enable and start service
   service:
     name: ddns
     state: started
     enabled: true
-  when:
-    - ddns_service_file is defined
-    - ddns_service_file.stat.exists | default(false)
+  when: openwrt_config_ddns is defined
+  ignore_errors: "{{ ansible_check_mode }}"
